@@ -4,9 +4,11 @@ import UserSelect from "./UserSelect.jsx";
 
 const Form = () => {
   const { register, handleSubmit } = useForm();
-  const [users, setUsers] = useState([]);
+  const [isReFetchIdx, setReFetchIdx] = useState(false);
   const [userSelectCount, setUserSelectCount] = useState(1);
   const [usersFromSelect, setUsersFromSelect] = useState([]);
+  const [usersFromSelectDisabled, setUsersFromSelectDisabled] = useState([]);
+  const [users, setUsers] = useState([]);
 
   const onSubmit = (values) => {
     values.userIds = usersFromSelect.map((userFromSelect) => {
@@ -17,19 +19,22 @@ const Form = () => {
   };
 
   const handleUsersFromSelect = (targetSelect, userId) => {
-    const targetSelectIdx = usersFromSelect.findIndex(
-      (item) => item.targetSelect === targetSelect,
+    const userFromSelectIdx = usersFromSelect.findIndex(
+      (userFromSelect) => userFromSelect.targetSelect === targetSelect,
     );
-    const user = users.find((user) => user.id === +userId);
 
-    if (targetSelectIdx !== -1) {
+    const user = users.find((user) => user.id === userId);
+
+    if (userFromSelectIdx !== -1) {
       const arr = usersFromSelect;
 
-      arr.splice(targetSelectIdx, 1, { targetSelect, user });
+      arr.splice(userFromSelectIdx, 1, { targetSelect, user });
       setUsersFromSelect([...arr]);
     } else {
       setUsersFromSelect([...usersFromSelect, { targetSelect, user }]);
     }
+
+    setReFetchIdx(!isReFetchIdx);
   };
 
   useEffect(() => {
@@ -64,7 +69,10 @@ const Form = () => {
               key={idx}
               targetSelect={idx}
               handleUsersFromSelect={handleUsersFromSelect}
+              isReFetchIdx={isReFetchIdx}
               usersFromSelect={usersFromSelect}
+              usersFromSelectDisabled={usersFromSelectDisabled}
+              setUsersFromSelectDisabled={setUsersFromSelectDisabled}
               users={users}
             />
           ))}
