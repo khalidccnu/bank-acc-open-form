@@ -4,7 +4,7 @@ import UserSelect from "./UserSelect.jsx";
 
 const Form = () => {
   const { register, handleSubmit } = useForm();
-  const [isReFetchIdx, setReFetchIdx] = useState(false);
+  const [isReFetch, setReFetch] = useState(false);
   const [userSelectCount, setUserSelectCount] = useState(1);
   const [usersFromSelect, setUsersFromSelect] = useState([]);
   const [usersFromSelectDisabled, setUsersFromSelectDisabled] = useState([]);
@@ -44,22 +44,17 @@ const Form = () => {
     arr.splice(userFromSelectIdx, 1, { targetSelect, user });
 
     setUsersFromSelect(arr);
-    setReFetchIdx(!isReFetchIdx);
+    setReFetch(!isReFetch);
   };
 
-  const handleDeleteUsersFromSelect = (targetSelect, prevUID) => {
+  const handleDeleteUsersFromSelect = (targetSelect) => {
     const arr = [...usersFromSelect];
-    const arrDisabled = [...usersFromSelectDisabled];
 
     const userFromSelectIdx = arr.findIndex(
       (userFromSelect) => userFromSelect.targetSelect === targetSelect,
     );
-    const userFromSelectDisabledIdx = arrDisabled.findIndex(
-      (userFromSelectDisabled) => userFromSelectDisabled === prevUID,
-    );
 
     arr.splice(userFromSelectIdx, 1);
-    arrDisabled.splice(userFromSelectDisabledIdx, 1);
 
     for (let i = userFromSelectIdx; i < arr.length; i++) {
       arr[i].targetSelect -= 1;
@@ -67,8 +62,7 @@ const Form = () => {
 
     setUserSelectCount((prev) => --prev);
     setUsersFromSelect(arr);
-    setUsersFromSelectDisabled(arrDisabled);
-    setReFetchIdx(!isReFetchIdx);
+    setReFetch(!isReFetch);
   };
 
   useEffect(() => {
@@ -113,7 +107,7 @@ const Form = () => {
               targetSelect={idx}
               handleUsersFromSelect={handleUsersFromSelect}
               handleDeleteUsersFromSelect={handleDeleteUsersFromSelect}
-              isReFetchIdx={isReFetchIdx}
+              isReFetch={isReFetch}
               usersFromSelect={usersFromSelect}
               usersFromSelectDisabled={usersFromSelectDisabled}
               setUsersFromSelectDisabled={setUsersFromSelectDisabled}

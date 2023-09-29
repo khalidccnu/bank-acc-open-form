@@ -4,13 +4,12 @@ const UserSelect = ({
   targetSelect,
   handleUsersFromSelect,
   handleDeleteUsersFromSelect,
-  isReFetchIdx,
+  isReFetch,
   usersFromSelect,
   usersFromSelectDisabled,
   setUsersFromSelectDisabled,
   users,
 }) => {
-  const [idx, setIdx] = useState(null);
   const [prevUID, setPrevUID] = useState(null);
 
   const handleUsersFromSelectDisabled = (userId) => {
@@ -26,20 +25,27 @@ const UserSelect = ({
     } else {
       setUsersFromSelectDisabled((prev) => [...prev, userId]);
     }
+  };
 
-    !prevUID ? setPrevUID(userId) : null;
+  const handleDeleteUsersFromSelectDisabled = () => {
+    if (prevUID) {
+      const arr = [...usersFromSelectDisabled];
+
+      const userFromSelectDisabledIdx = arr.findIndex(
+        (userFromSelectDisabled) => userFromSelectDisabled === prevUID,
+      );
+
+      arr.splice(userFromSelectDisabledIdx, 1);
+
+      setUsersFromSelectDisabled(arr);
+    }
   };
 
   useEffect(() => {
     if (usersFromSelect.length) {
-      const userFromSelectIdx = usersFromSelect.findIndex(
-        (userFromSelect) => userFromSelect.targetSelect === targetSelect,
-      );
-
-      setIdx(userFromSelectIdx);
-      prevUID ? setPrevUID(usersFromSelect[idx]?.user?.id) : null;
+      setPrevUID(usersFromSelect[targetSelect]?.user?.id);
     }
-  }, [usersFromSelect.length, isReFetchIdx]);
+  }, [usersFromSelect.length, isReFetch]);
 
   return (
     <div>
@@ -53,7 +59,7 @@ const UserSelect = ({
         >
           <option
             defaultValue=""
-            selected={!Boolean(usersFromSelect[idx]?.user?.id)}
+            selected={!Boolean(usersFromSelect[targetSelect]?.user?.id)}
             disabled
           >
             Select user id
@@ -62,7 +68,7 @@ const UserSelect = ({
             <option
               key={user.id}
               defaultValue={user.id}
-              selected={usersFromSelect[idx]?.user?.id === user.id}
+              selected={usersFromSelect[targetSelect]?.user?.id === user.id}
               disabled={usersFromSelectDisabled.includes(user.id)}
             >
               {user.id}
@@ -73,7 +79,7 @@ const UserSelect = ({
           type="text"
           placeholder="Name"
           className={`input input-sm input-bordered focus:outline-none`}
-          defaultValue={usersFromSelect[idx]?.user?.name}
+          defaultValue={usersFromSelect[targetSelect]?.user?.name}
           readOnly
           disabled
         />
@@ -81,7 +87,7 @@ const UserSelect = ({
           type="text"
           placeholder="Town"
           className={`input input-sm input-bordered focus:outline-none`}
-          defaultValue={usersFromSelect[idx]?.user?.town}
+          defaultValue={usersFromSelect[targetSelect]?.user?.town}
           readOnly
           disabled
         />
@@ -89,7 +95,7 @@ const UserSelect = ({
           type="text"
           placeholder="City"
           className={`input input-sm input-bordered focus:outline-none`}
-          defaultValue={usersFromSelect[idx]?.user?.city}
+          defaultValue={usersFromSelect[targetSelect]?.user?.city}
           readOnly
           disabled
         />
@@ -99,7 +105,10 @@ const UserSelect = ({
           <button
             type="button"
             className={`btn btn-xs normal-case`}
-            onClick={() => handleDeleteUsersFromSelect(targetSelect, prevUID)}
+            onClick={() => {
+              handleDeleteUsersFromSelect(targetSelect);
+              handleDeleteUsersFromSelectDisabled();
+            }}
           >
             Delete
           </button>
