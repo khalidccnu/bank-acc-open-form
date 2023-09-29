@@ -11,29 +11,63 @@ const Form = () => {
   const [users, setUsers] = useState([]);
 
   const onSubmit = (values) => {
-    values.userIds = usersFromSelect.map((userFromSelect) => {
-      return { userId: userFromSelect.user.id };
-    });
+    values.userIds = usersFromSelect
+      .map((userFromSelect) => {
+        return { userId: userFromSelect.user?.id };
+      })
+      .filter((userFromSelect) => Boolean(userFromSelect.userId));
 
     console.log(values);
   };
 
+  const handleAddMore = () => {
+    setUserSelectCount((prev) => ++prev);
+
+    setUsersFromSelect([
+      ...usersFromSelect,
+      {
+        targetSelect:
+          usersFromSelect[usersFromSelect.length - 1].targetSelect + 1,
+        user: null,
+      },
+    ]);
+  };
+
   const handleUsersFromSelect = (targetSelect, userId) => {
-    const userFromSelectIdx = usersFromSelect.findIndex(
+    const arr = [...usersFromSelect];
+
+    const userFromSelectIdx = arr.findIndex(
       (userFromSelect) => userFromSelect.targetSelect === targetSelect,
     );
 
     const user = users.find((user) => user.id === userId);
+    arr.splice(userFromSelectIdx, 1, { targetSelect, user });
 
-    if (userFromSelectIdx !== -1) {
-      const arr = usersFromSelect;
+    setUsersFromSelect(arr);
+    setReFetchIdx(!isReFetchIdx);
+  };
 
-      arr.splice(userFromSelectIdx, 1, { targetSelect, user });
-      setUsersFromSelect([...arr]);
-    } else {
-      setUsersFromSelect([...usersFromSelect, { targetSelect, user }]);
+  const handleDeleteUsersFromSelect = (targetSelect, prevUID) => {
+    const arr = [...usersFromSelect];
+    const arrDisabled = [...usersFromSelectDisabled];
+
+    const userFromSelectIdx = arr.findIndex(
+      (userFromSelect) => userFromSelect.targetSelect === targetSelect,
+    );
+    const userFromSelectDisabledIdx = arrDisabled.findIndex(
+      (userFromSelectDisabled) => userFromSelectDisabled === prevUID,
+    );
+
+    arr.splice(userFromSelectIdx, 1);
+    arrDisabled.splice(userFromSelectDisabledIdx, 1);
+
+    for (let i = userFromSelectIdx; i < arr.length; i++) {
+      arr[i].targetSelect -= 1;
     }
 
+    setUserSelectCount((prev) => --prev);
+    setUsersFromSelect(arr);
+    setUsersFromSelectDisabled(arrDisabled);
     setReFetchIdx(!isReFetchIdx);
   };
 
@@ -41,6 +75,15 @@ const Form = () => {
     fetch(`/users.json`)
       .then((response) => response.json())
       .then((result) => setUsers(result));
+  }, []);
+
+  useEffect(() => {
+    const userFromSelect = {
+      targetSelect: 0,
+      user: null,
+    };
+
+    setUsersFromSelect([userFromSelect]);
   }, []);
 
   return (
@@ -69,6 +112,7 @@ const Form = () => {
               key={idx}
               targetSelect={idx}
               handleUsersFromSelect={handleUsersFromSelect}
+              handleDeleteUsersFromSelect={handleDeleteUsersFromSelect}
               isReFetchIdx={isReFetchIdx}
               usersFromSelect={usersFromSelect}
               usersFromSelectDisabled={usersFromSelectDisabled}
@@ -76,18 +120,18 @@ const Form = () => {
               users={users}
             />
           ))}
-          <div className={`text-center mt-5`}>
+          <div className={`flex justify-center gap-5 mt-5`}>
             <button
               type="button"
               className={`btn btn-sm normal-case`}
-              onClick={() => setUserSelectCount((prev) => ++prev)}
+              onClick={handleAddMore}
             >
               Add More
             </button>
+            <button type="submit" className={`btn btn-sm normal-case`}>
+              Submit
+            </button>
           </div>
-          <button type="submit" className={`btn btn-sm`}>
-            Submit
-          </button>
         </form>
       </div>
     </section>

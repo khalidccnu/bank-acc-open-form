@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 const UserSelect = ({
   targetSelect,
   handleUsersFromSelect,
+  handleDeleteUsersFromSelect,
   isReFetchIdx,
   usersFromSelect,
   usersFromSelectDisabled,
@@ -14,7 +15,7 @@ const UserSelect = ({
 
   const handleUsersFromSelectDisabled = (userId) => {
     if (prevUID) {
-      const arr = usersFromSelectDisabled;
+      const arr = [...usersFromSelectDisabled];
 
       const userFromSelectDisabledIdx = arr.findIndex(
         (userFromSelectDisabled) => userFromSelectDisabled === prevUID,
@@ -26,7 +27,7 @@ const UserSelect = ({
       setUsersFromSelectDisabled((prev) => [...prev, userId]);
     }
 
-    setPrevUID(userId);
+    !prevUID ? setPrevUID(userId) : null;
   };
 
   useEffect(() => {
@@ -35,56 +36,75 @@ const UserSelect = ({
         (userFromSelect) => userFromSelect.targetSelect === targetSelect,
       );
 
-      if (userFromSelectIdx !== -1) setIdx(userFromSelectIdx);
+      setIdx(userFromSelectIdx);
+      prevUID ? setPrevUID(usersFromSelect[idx]?.user?.id) : null;
     }
-  }, [isReFetchIdx]);
+  }, [usersFromSelect.length, isReFetchIdx]);
 
   return (
-    <div className={`grid grid-cols-4 gap-5`}>
-      <select
-        className={`select select-sm select-bordered focus:outline-none`}
-        onChange={(e) => {
-          handleUsersFromSelect(targetSelect, +e.target.value);
-          handleUsersFromSelectDisabled(+e.target.value);
-        }}
-      >
-        <option defaultValue="" selected disabled>
-          Select user id
-        </option>
-        {users.map((user) => (
+    <div>
+      <div className={`grid grid-cols-4 gap-5`}>
+        <select
+          className={`select select-sm select-bordered focus:outline-none`}
+          onChange={(e) => {
+            handleUsersFromSelect(targetSelect, +e.target.value);
+            handleUsersFromSelectDisabled(+e.target.value);
+          }}
+        >
           <option
-            key={user.id}
-            defaultValue={user.id}
-            disabled={usersFromSelectDisabled.includes(user.id)}
+            defaultValue=""
+            selected={!Boolean(usersFromSelect[idx]?.user?.id)}
+            disabled
           >
-            {user.id}
+            Select user id
           </option>
-        ))}
-      </select>
-      <input
-        type="text"
-        placeholder="Name"
-        className={`input input-sm input-bordered focus:outline-none`}
-        defaultValue={usersFromSelect[idx]?.user.name}
-        readOnly
-        disabled
-      />
-      <input
-        type="text"
-        placeholder="Town"
-        className={`input input-sm input-bordered focus:outline-none`}
-        defaultValue={usersFromSelect[idx]?.user.town}
-        readOnly
-        disabled
-      />
-      <input
-        type="text"
-        placeholder="City"
-        className={`input input-sm input-bordered focus:outline-none`}
-        defaultValue={usersFromSelect[idx]?.user.city}
-        readOnly
-        disabled
-      />
+          {users.map((user) => (
+            <option
+              key={user.id}
+              defaultValue={user.id}
+              selected={usersFromSelect[idx]?.user?.id === user.id}
+              disabled={usersFromSelectDisabled.includes(user.id)}
+            >
+              {user.id}
+            </option>
+          ))}
+        </select>
+        <input
+          type="text"
+          placeholder="Name"
+          className={`input input-sm input-bordered focus:outline-none`}
+          defaultValue={usersFromSelect[idx]?.user?.name}
+          readOnly
+          disabled
+        />
+        <input
+          type="text"
+          placeholder="Town"
+          className={`input input-sm input-bordered focus:outline-none`}
+          defaultValue={usersFromSelect[idx]?.user?.town}
+          readOnly
+          disabled
+        />
+        <input
+          type="text"
+          placeholder="City"
+          className={`input input-sm input-bordered focus:outline-none`}
+          defaultValue={usersFromSelect[idx]?.user?.city}
+          readOnly
+          disabled
+        />
+      </div>
+      {targetSelect ? (
+        <div className={`text-end mt-5`}>
+          <button
+            type="button"
+            className={`btn btn-xs normal-case`}
+            onClick={() => handleDeleteUsersFromSelect(targetSelect, prevUID)}
+          >
+            Delete
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 };
