@@ -6,7 +6,7 @@ import Form from "./components/Form.jsx";
 const App = () => {
   const router = createBrowserRouter([
     {
-      path: "/",
+      path: "bank-acc-open-form",
       element: <Root />,
       children: [
         {

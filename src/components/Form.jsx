@@ -66,7 +66,7 @@ const Form = () => {
   };
 
   useEffect(() => {
-    fetch(`/users.json`)
+    fetch(`./users.json`)
       .then((response) => response.json())
       .then((result) => setUsers(result));
   }, []);
