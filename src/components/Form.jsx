@@ -1,69 +1,49 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import UserSelect from "./UserSelect.jsx";
 
 const Form = () => {
-  const { register, handleSubmit } = useForm();
-  const [isReFetch, setReFetch] = useState(false);
-  const [userSelectCount, setUserSelectCount] = useState(1);
-  const [usersFromSelect, setUsersFromSelect] = useState([]);
-  const [usersFromSelectDisabled, setUsersFromSelectDisabled] = useState([]);
   const [users, setUsers] = useState([]);
-
-  const onSubmit = (values) => {
-    values.userIds = usersFromSelect
-      .map((userFromSelect) => {
-        return { userId: userFromSelect.user?.id };
-      })
-      .filter((userFromSelect) => Boolean(userFromSelect.userId));
-
-    console.log(values);
-  };
+  const [userList, setUserList] = useState([{ user: {} }]);
+  const [revUsers, setRevUsers] = useState([]);
+  const [save, setSave] = useState(false);
 
   const handleAddMore = () => {
-    setUserSelectCount((prev) => ++prev);
-
-    setUsersFromSelect([
-      ...usersFromSelect,
-      {
-        targetSelect:
-          usersFromSelect[usersFromSelect.length - 1].targetSelect + 1,
-        user: null,
-      },
-    ]);
+    setUserList([...userList, { user: {} }]);
   };
 
-  const handleUsersFromSelect = (targetSelect, userId) => {
-    const arr = [...usersFromSelect];
+  const handleRemove = (idx) => {
+    const arr = [...userList];
 
-    const userFromSelectIdx = arr.findIndex(
-      (userFromSelect) => userFromSelect.targetSelect === targetSelect,
-    );
-
-    const user = users.find((user) => user.id === userId);
-    arr.splice(userFromSelectIdx, 1, { targetSelect, user });
-
-    setUsersFromSelect(arr);
-    setReFetch(!isReFetch);
+    arr.splice(idx, 1);
+    setUserList(arr);
   };
 
-  const handleDeleteUsersFromSelect = (targetSelect) => {
-    const arr = [...usersFromSelect];
+  const handleChange = (e, idx) => {
+    const { name, value } = e.target;
+    const arr = [...userList];
 
-    const userFromSelectIdx = arr.findIndex(
-      (userFromSelect) => userFromSelect.targetSelect === targetSelect,
-    );
+    arr[idx][name] = value;
+    setUserList(arr);
+  };
 
-    arr.splice(userFromSelectIdx, 1);
+  useEffect(() => {
+    if (save) {
+      const arr = [
+        ...userList
+          .map((elem) => ({
+            ...(elem.user
+              ? typeof elem.user === "string"
+                ? JSON.parse(elem.user)
+                : elem.user
+              : {}),
+          }))
+          .filter((elem) => Boolean(elem.id)),
+      ];
 
-    for (let i = userFromSelectIdx; i < arr.length; i++) {
-      arr[i].targetSelect -= 1;
+      setRevUsers(arr);
+      setSave(false);
     }
-
-    setUserSelectCount((prev) => --prev);
-    setUsersFromSelect(arr);
-    setReFetch(!isReFetch);
-  };
+  }, [save]);
 
   useEffect(() => {
     fetch(`./users.json`)
@@ -71,64 +51,65 @@ const Form = () => {
       .then((result) => setUsers(result));
   }, []);
 
-  useEffect(() => {
-    const userFromSelect = {
-      targetSelect: 0,
-      user: null,
-    };
-
-    setUsersFromSelect([userFromSelect]);
-  }, []);
-
   return (
-    <section className={`py-10`}>
-      <div className="container">
-        <form
-          className={`grid grid-cols-1 gap-5`}
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <input
-            type="text"
-            placeholder="Branch"
-            className={`input input-sm input-bordered focus:outline-none`}
-            {...register("branch")}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Location"
-            className={`input input-sm input-bordered focus:outline-none`}
-            {...register("location")}
-            required
-          />
-          {[...Array(userSelectCount)].map((_, idx) => (
+    <>
+      <section className={`py-10`}>
+        <div className="container">
+          <form className={`grid grid-cols-1 gap-5`}>
+            <input
+              type="text"
+              placeholder="Branch"
+              className={`input input-sm input-bordered focus:outline-none`}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Location"
+              className={`input input-sm input-bordered focus:outline-none`}
+              required
+            />
             <UserSelect
-              key={idx}
-              targetSelect={idx}
-              handleUsersFromSelect={handleUsersFromSelect}
-              handleDeleteUsersFromSelect={handleDeleteUsersFromSelect}
-              isReFetch={isReFetch}
-              usersFromSelect={usersFromSelect}
-              usersFromSelectDisabled={usersFromSelectDisabled}
-              setUsersFromSelectDisabled={setUsersFromSelectDisabled}
+              setSave={setSave}
+              handleAddMore={handleAddMore}
+              handleRemove={handleRemove}
+              handleChange={handleChange}
+              userList={userList}
               users={users}
             />
-          ))}
-          <div className={`flex justify-center gap-5 mt-5`}>
-            <button
-              type="button"
-              className={`btn btn-sm normal-case`}
-              onClick={handleAddMore}
-            >
-              Add More
-            </button>
-            <button type="submit" className={`btn btn-sm normal-case`}>
-              Submit
-            </button>
+          </form>
+        </div>
+      </section>
+      {revUsers.length ? (
+        <section className={`mt-10`}>
+          <div className="container">
+            <div className="overflow-x-auto">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Town</th>
+                    <th>City</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {revUsers.map((elem, idx) => {
+                    return (
+                      <tr key={elem.id}>
+                        <th>{++idx}</th>
+                        <td>{elem.name}</td>
+                        <td>{elem.town}</td>
+                        <td>{elem.city}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </form>
-      </div>
-    </section>
+        </section>
+      ) : null}
+    </>
   );
 };
 
