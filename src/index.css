@@ -1,3 +1,164 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Default Customization */
+.meet_with_dc {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.meet_with_dc .meet_with_box_wrapper {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.meet_with_dc .meet_with_box_wrapper .meet_with_box {
+  display: flex;
+  align-items: center;
+  border-radius: 0.3125rem;
+  border: 1px solid #f3f3f7;
+  background-color: #f9f9fb;
+  padding: 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: normal;
+  cursor: pointer;
+}
+
+.meet_with_dc .meet_with_box_wrapper .meet_with_box:first-child {
+  color: #12b76a;
+}
+
+.meet_with_dc .meet_with_box_wrapper .meet_with_box:last-child {
+  color: #2e90fa;
+}
+
+.meet_with_dc .meet_with_box_wrapper .meet_with_box img {
+  width: 1rem;
+  flex-shrink: 0;
+}
+
+.meet_with_dc .meet_with_box_wrapper .meet_with_box .title {
+  margin-left: 0.5rem;
+}
+
+.meet_with_dc .meet_with_box_wrapper .meet_with_box input[type='radio'], .meet_with_dc .meet_with_box_wrapper .meet_with_box input[type='checkbox'] {
+  flex-shrink: 0;
+  margin-left: auto;
+  appearance: none;
+  background-color: transparent;
+  border: 1px solid #70739b;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 0.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.meet_with_dc .meet_with_box_wrapper .meet_with_box input[type='radio']:checked, .meet_with_dc .meet_with_box_wrapper .meet_with_box input[type='checkbox']:checked {
+  background-color: #292e6a;
+}
+
+.meet_with_dc .meet_with_box_wrapper .meet_with_box input[type='radio']:checked::before, .meet_with_dc .meet_with_box_wrapper .meet_with_box input[type='checkbox']:checked::before {
+  opacity: 1;
+}
+
+.meet_with_dc .meet_with_box_wrapper .meet_with_box input[type='radio']::before, .meet_with_dc .meet_with_box_wrapper .meet_with_box input[type='checkbox']::before {
+  content: '';
+  width: 0.785rem;
+  height: 0.785rem;
+  display: inline-block;
+  background: url('/images/icons/correct.svg');
+  opacity: 0;
+}
+
+@media only screen and (min-width: 640px) {
+  .meet_with_dc .meet_with_box_wrapper {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
+/* Manual Customization */
+.meet_with_mc {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.meet_with_mc .meet_with_box_wrapper {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.meet_with_mc .meet_with_box_wrapper .meet_with_box {
+  display: flex;
+  align-items: center;
+  border-radius: 0.3125rem;
+  border: 1px solid #f3f3f7;
+  background-color: #f9f9fb;
+  padding: 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: normal;
+  cursor: pointer;
+}
+
+.meet_with_mc .meet_with_box_wrapper .meet_with_box:first-child {
+  color: #12b76a;
+}
+
+.meet_with_mc .meet_with_box_wrapper .meet_with_box:last-child {
+  color: #2e90fa;
+}
+
+.meet_with_mc .meet_with_box_wrapper .meet_with_box img {
+  width: 1rem;
+  flex-shrink: 0;
+}
+
+.meet_with_mc .meet_with_box_wrapper .meet_with_box .title {
+  margin-left: 0.5rem;
+}
+
+.meet_with_mc .meet_with_box_wrapper .meet_with_box .checkbox_icon_wrapper {
+  margin-left: auto;
+}
+
+.meet_with_mc .meet_with_box_wrapper .meet_with_box .checkbox_icon_wrapper input[type='checkbox'] {
+  position: absolute;
+  left: -9999px;
+  overflow: hidden;
+}
+
+.meet_with_mc .meet_with_box_wrapper .meet_with_box .checkbox_icon_wrapper input[type='checkbox']:checked + .checkbox_icon svg {
+  opacity: 1;
+}
+
+.meet_with_mc .meet_with_box_wrapper .meet_with_box .checkbox_icon_wrapper .checkbox_icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 1px solid #70739b;
+  border-radius: 0.25rem;
+}
+
+.meet_with_mc .meet_with_box_wrapper .meet_with_box .checkbox_icon_wrapper .checkbox_icon svg {
+  color: #292e6a;
+  opacity: 0;
+  transition: opacity 500ms;
+}
+
+@media only screen and (min-width: 640px) {
+  .meet_with_mc .meet_with_box_wrapper {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
