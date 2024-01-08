@@ -67,6 +67,16 @@ const Inputs = () => {
             </label>
           </div>
         </div>
+        <div className="destination">
+          <label htmlFor="destination">Destination</label>
+          <select name="destination">
+            <option selected disabled value="">
+              Select
+            </option>
+            <option value="dhaka">Dhaka</option>
+            <option value="kolkata">Kolkata</option>
+          </select>
+        </div>
 
         {/* Manual Customization */}
         <div className="meet_with_mc">

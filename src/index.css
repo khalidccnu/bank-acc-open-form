@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* Default Customization */
-.meet_with_dc {
+.meet_with_dc, .destination {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -81,6 +81,41 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
   }
+}
+
+.destination select {
+  appearance: none;
+  outline: 0;
+  padding: 0.875rem;
+  border: 1px solid #f3f3f7;
+  border-radius: 0.3125rem;
+  color: #666885;
+  background: url('/images/icons/arrow_down.svg') no-repeat right 0.8rem center / 1rem,
+  linear-gradient(to left, #f9f9fb 3rem, transparent 3rem);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: normal;
+  cursor: pointer;
+}
+
+.destination select::placeholder {
+  color: #666885;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.destination select:focus {
+  outline: none;
+}
+
+.destination select::-ms-expand {
+  display: none;
+}
+
+.destination select option {
+  color: inherit;
+  background-color: #fff;
 }
 
 /* Manual Customization */
