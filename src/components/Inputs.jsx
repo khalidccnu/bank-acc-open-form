@@ -118,6 +118,60 @@ const Inputs = () => {
             </label>
           </div>
         </div>
+        <ul className="custom_select">
+          <li>
+            <input
+              className="select_close"
+              type="radio"
+              name="destination"
+              id="select_close"
+              value=""
+            />
+            <span className="select_label select_label_placeholder">
+              Select
+            </span>
+          </li>
+          <li className="select_items">
+            <input
+              className="select_expand"
+              type="radio"
+              name="destination"
+              id="select_expand"
+            />
+            <label
+              className="select_close_label"
+              htmlFor="select_close"
+            ></label>
+            <ul className="select_options">
+              <li className="select_option">
+                <input
+                  className="select_input"
+                  type="radio"
+                  name="destination"
+                  id="destination_dhaka"
+                />
+                <label className="select_label" htmlFor="destination_dhaka">
+                  Dhaka
+                </label>
+              </li>
+              <li className="select_option">
+                <input
+                  className="select_input"
+                  type="radio"
+                  name="destination"
+                  id="destination_india"
+                />
+                <label className="select_label" htmlFor="destination_india">
+                  India
+                </label>
+              </li>
+            </ul>
+            <label
+              className="select_expand_label"
+              htmlFor="select_expand"
+            ></label>
+          </li>
+        </ul>
       </div>
     </section>
   );

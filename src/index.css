@@ -197,3 +197,124 @@
     gap: 1rem;
   }
 }
+
+.custom_select {
+  position: relative;
+  width: 100%;
+  height: 3rem;
+  background-color: #f9f9fb;
+  border-radius: 0.3125rem;
+  cursor: pointer;
+}
+
+.custom_select .select_close {
+  display: none;
+}
+
+.custom_select .select_label {
+  position: relative;
+  display: block;
+  height: 0;
+  padding-left: 0.875rem;
+  font-size: 0.875rem;
+  line-height: 3rem;
+  color: #666885;
+  background-color: #f9f9fb;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 250ms cubic-bezier(0.4, 0.25, 0.3, 1);
+}
+
+.custom_select .select_label_placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3rem;
+  opacity: 0.6;
+  background-color: transparent;
+}
+
+.custom_select .select_items {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding-top: 3rem;
+  border: 1px solid #f3f3f7;
+  border-radius: 0.3125rem;
+  overflow: hidden;
+}
+
+.custom_select .select_items .select_expand {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 100%;
+}
+
+.custom_select .select_items .select_expand::after {
+  content: "\003E";
+  position: absolute;
+  top: 0.7rem;
+  right: 1rem;
+  font-size: 1rem;
+  color: #3e3e3e;
+  opacity: 0.6;
+  z-index: 1;
+  pointer-events: none;
+  transform: rotate(90deg) scaleY(1.75);
+  transition: all 250ms cubic-bezier(0.4, 0.25, 0.3, 1);
+}
+
+.custom_select .select_items .select_expand:hover::after {
+  opacity: 1;
+}
+
+.custom_select .select_items .select_expand:checked::after {
+  transform: rotate(90deg) scaleX(-1) scaleY(1.75);
+}
+
+.custom_select .select_items .select_expand_label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3rem;
+  display: block;
+  cursor: pointer;
+}
+
+.custom_select .select_items .select_close_label {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: none;
+}
+
+.custom_select .select_items .select_options .select_option .select_input {
+  display: none;
+}
+
+.custom_select .select_items .select_expand:checked + .select_close_label + .select_options + .select_expand_label {
+  display: none;
+}
+
+.custom_select .select_items .select_expand:checked + .select_close_label {
+  display: block;
+}
+
+.custom_select .select_items .select_expand:checked + .select_close_label + .select_options .select_label {
+  height: 3rem;
+}
+
+.custom_select .select_items .select_expand:checked + .select_close_label + .select_options .select_label:hover {
+  background-color: #f7f7f7;
+}
+
+.custom_select .select_items .select_options .select_option .select_input:checked + .select_label {
+  height: 3rem;
+  margin-top: -3rem;
+}
